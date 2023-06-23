@@ -1,43 +1,40 @@
 const mongoose = require("mongoose");
 
-const EnrollmentSchema = new mongoose.Schema({
+const ReqIdSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: true,
     min: 3,
     max: 20,
   },
+
   lastName: {
     type: String,
     required: true,
 
     max: 50,
   },
-  email: {
-    type: String,
-    required: true,
-    min: 8,
-    
-  },
-
+  
   relationship: {
     type: String,
     required: true,
   },
   
-  isApproved: {
-    type: Boolean,
-    default: false,
-  },
   phoneNumber: {
     type: String,
     required: true,
   },
  
-  birthDate: {
+  address: {
     type: String,
     required: true,
   },
+
+  isApproved: {
+    type: Boolean,
+    default: false,
+  },
+
 });
 
-module.exports = mongoose.model("Enrollees", EnrollmentSchema);
+module.exports = mongoose.model("createId", ReqIdSchema);

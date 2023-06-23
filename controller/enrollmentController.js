@@ -28,8 +28,9 @@ const addEnrollee = async (req, res) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
+    relationship: req.body.relationship,
     phoneNumber: req.body.phoneNumber,
-    birthday: req.body.birthday,
+    birthDate: req.body.birthDate,
   });
 
   try {
