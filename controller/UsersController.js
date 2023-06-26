@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 // Create a new user
 const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -19,7 +19,8 @@ const createUser = async (req, res) => {
 
     // Create the new user
     const newUser = new User({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
     });
@@ -62,7 +63,7 @@ const getUserById = async (req, res) => {
 // Update a user by ID
 const updateUserById = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const {email, password } = req.body;
 
     // Hash the new password
     const salt = await bcrypt.genSalt();
@@ -72,7 +73,6 @@ const updateUserById = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       {
-        name,
         email,
         password: hashedPassword,
       },
