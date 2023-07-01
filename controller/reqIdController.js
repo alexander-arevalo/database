@@ -39,12 +39,6 @@ const getAll = async (req, res) => {
     res.status(200).json({message: `Get Id for ${req.params.id}`});
     };
   
-  //@desc get all Id
-  //@route route PUT /api/reqId/:id
-  //@access public 
-  const updateId = (req, res) => {
-    res.status(200).json({message: `Update Id for ${req.params.id}`});
-    };
   
   //@desc get all Id
   //@route route DELETE /api/reqId/:id
@@ -60,7 +54,6 @@ const getAll = async (req, res) => {
     getAll, 
     createId, 
     getId, 
-    updateId, 
     deleteId,
   };
   

@@ -31,7 +31,7 @@ const createEvent = async (req, res) => {
         const newCreateEvent = await event.save();
         res.status(201).json({message: "Succesfully Added New Event", newCreateEvent });
     } catch (error) {
-        res.status(500).json({message: "something went wrong", error})
+        res.status(500).json({message: "Something went wrong", error})
     }
 
 };
