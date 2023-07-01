@@ -116,6 +116,7 @@ const login = async (req, res) => {
 
     // Check if password is correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isAdmin = user.isAdmin;
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(
       user.password +
@@ -130,7 +131,7 @@ const login = async (req, res) => {
     // Create a JWT token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-    res.json({ token });
+    res.json({ isAdmin, token,successful:true });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
