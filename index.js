@@ -8,6 +8,8 @@ const reqIdRouter = require("./routes/reqIdRoutes");
 const eventRouter = require("./routes/eventRoutes");
 const cors = require("cors");
 const app = express();
+const uploadRouter = require('./routes/uploaderRoutes')
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // use the json middleware to parse JSON request bodies
@@ -15,6 +17,11 @@ app.use(bodyParser.json());
 
 conn();
 app.use(cors());
+app.use((req,res,next)=>{
+  res.setHeader("Access-Control-Allow-Origin","*");
+  next()
+})
+app.use("/api",uploadRouter)
 app.use("/api/auth", userRouter);
 app.use("/api/enrollees", enrolleesRouter);
 // app.use("/api/upload", uploadRouter);

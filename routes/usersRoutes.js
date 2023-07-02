@@ -4,7 +4,8 @@ const {
   login,
   deleteUserById,
   createUser,
-
+approveUser,
+declineUser,
   updateUserById,
   getUserById,
   getUsers,
@@ -14,8 +15,10 @@ const auth = require("../utils/auth");
 router.post("/signup", createUser);
 router.post("/login", login);
 router.get("/", auth.verifyToken, getUsers);
-router.get("/:id", auth.verifyToken, getUserById);
+router.get("/:id", auth.verifyToken,auth.isAdmin, getUserById);
 router.patch("/:id", auth.verifyToken, updateUserById);
 router.delete("/:id", auth.verifyToken, auth.isAdmin, deleteUserById);
+router.patch("/approve/:id", auth.verifyToken,auth.isAdmin,approveUser);
+router.patch("/decline/:id",auth.verifyToken,auth.isAdmin,declineUser)
 
 module.exports = router;

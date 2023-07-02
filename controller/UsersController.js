@@ -1,11 +1,12 @@
 const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongodb = require('mongodb');
 
 // Create a new user
 const createUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password,proofOfResidency } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -23,6 +24,7 @@ const createUser = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
+      proofOfResidency
     });
 
     // Save the new user to the database
@@ -62,48 +64,118 @@ const getUserById = async (req, res) => {
 
 // Update a user by ID
 const updateUserById = async (req, res) => {
-  try {
-    const {email, password } = req.body;
 
+    const { firstName,lastName, email, password } = req.body;
+  const id = req.params.id
+  
     // Hash the new password
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update the user
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        email,
-        password: hashedPassword,
-      },
-      { new: true }
-    );
+    const user = await User.findById(id).then((resp)=>{
+      if(!resp){
+        res.status(404).send({message:`User with id ${id} is not found`})  
+      }
+      if(firstName){
+        resp.firstName= firstName;
+      }
+      if(lastName){
+        resp.lastName= lastName;
+      }
+      if(email){
+        resp.email = email
+      }
+      if(password){
+        resp.password = hashedPassword;
+      }
+      resp.save();
+      res.status(200).send({message:"User successfully updated!", User:resp})
+    })
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+  
+//     const hashedPassword = await bcrypt.hash(password, 10);
+// var id = req.params.id
+//     // Update the user
+//     const user = await User.updateOne(
+//       { _id: new mongodb.ObjectId(id) },
+//       {
+//         $set:{...req.body,hashedPassword}
+//       },
+  
+//     )
+//     .then((resp) => {
+//       res.status(200).send({resp,message:'User updated successfully'});
+//     })
+//     .catch((err) => {
+//       console.error('Failed to update user:', err);
+//       res.status(500).send('Failed to update user');
+//     });
 
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+
+
+   
+
 };
 
 // Delete a user by ID
 const deleteUserById = async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-};
 
+    console.log("starting to delete user");
+    const id = req.params.id;
+    const user = await User.findByIdAndRemove(id).then(result=>{
+      if(!result){
+        return res.status(404).send({message:`User with id ${id} is not found`} );
+
+      }else res.send({message:`User with id ${id} is successfully deleted!`})
+    }).catch(err=>{
+
+      res.status(500).send
+      console.log(err.message)
+    })
+  
+  
+  
+
+  
+  
+};
+const approveUser = async(req,res)=>{
+const id = req.params.id
+const user = await User.findById(id);
+if(user.isApproved==null){
+  await User.findByIdAndUpdate(id,{isApproved:true},{useFindAndModify:false}).then(resp=>{
+    if(!resp){
+      res.status(404).send({message:"User not found"})
+    }
+    res.send({resp,message:`User with id ${id} is successfully approved`})
+  }).catch(err=>{
+    res.status(500).send({message:err.message});
+  })
+ 
+}else if(user.isApproved){
+  res.status(401).send({message:"This user is already approved"})
+}else{
+  res.status(401).send({message:"Bad Request"})
+}
+  
+
+
+}
+
+const declineUser = async(req,res)=>{
+const id = req.params.id
+  const user = await User.findById(id)
+  if(user.isApproved==null){
+    await User.findByIdAndUpdate(id,{isApproved:false},{useFindAndModify:false}).then(resp=>{
+      if(!resp){
+        res.status(404).send({message:"User not found"})
+      }
+      res.send({resp,message:`User with id ${id} is successfully declined`})
+    }).catch(err=>{
+      res.status(500).send({message:err.message});
+    })
+  }
+  res.status(401).send({message:"something went wrong tinatamad ako"})
+ }
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -117,6 +189,7 @@ const login = async (req, res) => {
     // Check if password is correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
     const isAdmin = user.isAdmin;
+    const isVerified = user.isApproved;
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(
       user.password +
@@ -124,14 +197,17 @@ const login = async (req, res) => {
         " this is from body" +
         password
     );
-    if (!isPasswordValid) {
+    if (!isPasswordValid&& user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
-
+    if(user&& !isVerified || isVerified==null){
+      return res.status(400).json({ message: "This user is not verified" });
+    }
+   
     // Create a JWT token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
     res.json({ isAdmin, token,successful:true });
+   
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
@@ -142,7 +218,8 @@ module.exports = {
   login,
   deleteUserById,
   createUser,
-
+  approveUser,
+  declineUser,
   updateUserById,
   getUserById,
   getUsers,

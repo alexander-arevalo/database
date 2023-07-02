@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
+//NOTE: LAHAT NG REQUIRED KAHIT SA EDIT DAPAT REQUIRED PA RIN ITO 
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -24,16 +25,26 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  isApproved:{
+    type:Boolean,
+    required:false,
+    default:null
+  },
+  proofOfResidency:{
+    type:String,
+    required:true,
+    
+  }
 });
 
 // Pre middleware to hash password before saving
-UserSchema.pre("save", async function (next) {
-  const user = this;
-  if (!user.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(user.password, salt);
-  user.password = hash;
-  next();
-});
+// UserSchema.pre("save", async function (next) {
+//   const user = this;
+//   if (!user.isModified("password")) return next();
+//   const salt = await bcrypt.genSalt(10);
+//   const hash = await bcrypt.hash(user.password, salt);
+//   user.password = hash;
+//   next();
+// });
 
 module.exports = mongoose.model("User", UserSchema);
