@@ -2,9 +2,11 @@ const User = require("../models/Users");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongodb = require('mongodb');
-
+const sendEmail = require("../utils/emailer")
 // Create a new user
 const createUser = async (req, res) => {
+  const text= "Please do wait for approval from staff, We are currently validating your information, Thank you!"
+  const subject = "User Registration Pending"
   try {
     const { firstName, lastName, email, password,proofOfResidency } = req.body;
 
@@ -27,8 +29,10 @@ const createUser = async (req, res) => {
       proofOfResidency
     });
 
+
     // Save the new user to the database
     const savedUser = await newUser.save();
+    sendEmail(email,text,subject);
 
     res.status(201).json({ user: savedUser });
   } catch (err) {
