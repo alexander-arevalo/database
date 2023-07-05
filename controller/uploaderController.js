@@ -37,20 +37,7 @@ const uploadImage= ()=>{
     // let imgUpload= base64Converter(req.body.image)
     let secureUrl
     console.log("entering uploadImage function")
-uploadImg.single('image'), (req,res)=>{
-    cloudinary.uploader.upload(req.file.image,{folder:'uploads'},(error,result)=>{
-        console.log("uploading....")
-        if (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Something went wrong' });
-          } else {
-            console.log("successful")
-            secureUrl = result.secure_url
-            res.status(200).json({url:secureUrl})
-          
-          }
-    })
-}
+
 
 }
 

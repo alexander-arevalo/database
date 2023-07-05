@@ -32,7 +32,7 @@ const createUser = async (req, res) => {
 
     // Save the new user to the database
     const savedUser = await newUser.save();
-    sendEmail(email,text,subject);
+    sendEmail(email,subject,text);
 
     res.status(201).json({ user: savedUser });
   } catch (err) {

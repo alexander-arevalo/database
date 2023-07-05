@@ -19,10 +19,13 @@ cloudinary.config(
 
 
 router.post('/upload', uploadImg.single('image'), (req,res)=>{
-   
-    cloudinary.uploader.upload(req.file.image,{folder:'uploads'},(error,result)=>{
+ 
+    const imageData = req.file.buffer.toString('base64');
+    const mimeType = req.file.mimetype;
+    const dataUri = `data:${mimeType};base64,${imageData}`;
+    cloudinary.uploader.upload(dataUri,{folder:'uploads'},(error,result)=>{
         console.log("uploading....")
-        console.log(req.file.image)
+    
         if (error) {
             console.error(error);
             res.status(500).json({ error: 'Something went wrong' });
