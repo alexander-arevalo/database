@@ -34,7 +34,9 @@ const UserSchema = new mongoose.Schema({
     type:String,
     required:true,
     
-  }
+  }, 
+  resetToken: String,
+  resetTokenExpiration: Date,
 });
 
 // Pre middleware to hash password before saving

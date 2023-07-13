@@ -3,12 +3,12 @@ const User = require("../models/Users");
 
 const verifyToken = async (req, res, next) => {
   const tokenFromHeader = req.headers.authorization;
-  const token = tokenFromHeader.split(" ")[1];
+  
   if(!tokenFromHeader) {
     return res.status(401).json({ message: "Token cannot be null" });
   }
 
-
+  const token = tokenFromHeader.split(" ")[1];
   console.log(token + " token")
   console.log("SECRET KEY = : "+ process.env.JWT_SECRET)
 

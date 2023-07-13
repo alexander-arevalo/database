@@ -2,15 +2,17 @@ const express = require("express");
 const router = express.Router();
 const multer = require('multer');
 const { 
-    createId, 
+  requestStudentId, 
     getAll,
     getId, 
+    approveIdRequest
 } = require("../controller/reqIdController");
 
-router.post("/", createId);
+router.post("/", requestStudentId);
 
 router.get("/", getAll);
 
 router.get("/:id", getId);
+router.patch("/:id",approveIdRequest)
 
   module.exports = router;

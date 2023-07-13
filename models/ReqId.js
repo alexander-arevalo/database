@@ -29,10 +29,14 @@ const ReqIdSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  studentPicture:{
+    type:String,
+    required:true
+  },
 
   isApproved: {
     type: Boolean,
-    default: false,
+    default: null,
   },
 
 });

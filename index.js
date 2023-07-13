@@ -4,7 +4,7 @@ const enrolleesRouter = require("./routes/enrollmentRoutes");
 const bodyParser = require("body-parser");
 const userRouter = require("./routes/usersRoutes");
 // const uploadRouter = require ("./routes/uploadRoutes");
-const reqIdRouter = require("./routes/reqIdRoutes");
+const requestIdRrouter = require("./routes/reqIdRoutes");
 const eventRouter = require("./routes/eventRoutes");
 const cors = require("cors");
 const app = express();
@@ -25,7 +25,7 @@ app.use("/api",uploadRouter)
 app.use("/api/auth", userRouter);
 app.use("/api/enrollees", enrolleesRouter);
 // app.use("/api/upload", uploadRouter);
-app.use("/api/reqId", reqIdRouter);
+app.use("/api/requestId", requestIdRrouter);
 app.use("/api/event", eventRouter);
 const PORT = 3001 || 3002;
 app.listen(PORT, () => {
