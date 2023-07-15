@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const auth =require("../utils/auth")
+const auth = require("../utils/auth");
 const {
   addAnnouncement,
   deleteAnnouncement,
@@ -8,9 +8,9 @@ const {
   editAnnouncement,
 } = require("../controller/announcementController");
 
-router.post("/",auth.verifyToken,auth.isAdmin,addAnnouncement)
-router.get("/",auth.verifyToken,auth.isAdmin,getAllAnnouncement)
-router.delete("/",auth.verifyToken,auth.isAdmin,deleteAnnouncement)
-router.patch("/",auth.verifyToken,auth.isAdmin,editAnnouncement)
+router.post("/", auth.verifyToken, auth.isAdmin, addAnnouncement);
+router.get("/", auth.verifyToken, auth.isAdmin, getAllAnnouncement);
+router.delete("/", auth.verifyToken, auth.isAdmin, deleteAnnouncement);
+router.patch("/", auth.verifyToken, auth.isAdmin, editAnnouncement);
 
-module.exports = router
+module.exports = router;

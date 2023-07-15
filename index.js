@@ -28,7 +28,7 @@ app.use("/api/enrollees", enrolleesRouter);
 // app.use("/api/upload", uploadRouter);
 app.use("/api/requestId", requestIdRrouter);
 app.use("/api/event", eventRouter);
-app.use("api/announcement", announcementRouter);
+app.use("/api/announcement", announcementRouter);
 const PORT = 3001 || 3002;
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}....`);

@@ -4,9 +4,9 @@ const getAllAnnouncement = async (req, res) => {
   await Announcement.find()
     .then((resp) => {
       if (!resp) {
-        res.send.json({ message: "No announcements found" });
+        res.json({ message: "No announcements found"+ resp });
       }
-      res.send.json(resp);
+      res.json({resp});
     })
     .catch((err) => {
       res.status(500).json({ message: err.message });
