@@ -10,7 +10,7 @@ const cors = require("cors");
 const app = express();
 const uploadRouter = require("./routes/uploaderRoutes");
 const announcementRouter = require("./routes/announcementRoutes");
-
+const galleryRouter = require("./routes/galleryRoutes");
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // use the json middleware to parse JSON request bodies
@@ -25,6 +25,7 @@ app.use((req, res, next) => {
 app.use("/api", uploadRouter);
 app.use("/api/auth", userRouter);
 app.use("/api/enrollees", enrolleesRouter);
+app.use("/api/gallery", galleryRouter);
 // app.use("/api/upload", uploadRouter);
 app.use("/api/requestId", requestIdRrouter);
 app.use("/api/event", eventRouter);
