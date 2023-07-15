@@ -17,23 +17,22 @@ const EnrollmentSchema = new mongoose.Schema({
     type: String,
     required: true,
     min: 8,
-    
   },
 
   relationship: {
     type: String,
     required: true,
   },
-  
+
   isApproved: {
     type: Boolean,
-    default: false,
+    default: null,
   },
   phoneNumber: {
     type: String,
     required: true,
   },
- 
+
   birthDate: {
     type: String,
     required: true,
