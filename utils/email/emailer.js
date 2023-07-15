@@ -1,14 +1,18 @@
 const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
-const fs = require('fs')
+const fs = require("fs");
 const path = require("path");
+const dotenv = require("dotenv");
+
+dotenv.config();
 const userEmail = process.env.EMAIL;
 const password = process.env.PASSWORD_EMAIL;
+console.log(userEmail + "useremail" + password + "userpassword")
 var autoEmail = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "marsdaycare3@gmail.com",
-    pass: "zruofombvdlvjvpt",
+    user: userEmail.trim(),
+    pass: password.trim(),
   },
 });
 
@@ -48,19 +52,18 @@ const sendForgotPasswordMail = async (email, subject, payload, template) => {
     };
     // Send email
     await autoEmail.sendMail(options(), (err, info) => {
-        if (err) {
-          console.log(err.message);
-        } else {
-          console.log("email sent successfully" + info.response);
-        }
-      });
-    
-    console.log("success")
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log("email sent successfully" + info.response);
+      }
+    });
+
+    console.log("success");
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return error;
   }
-
 };
 
 module.exports = { sendEmail, sendForgotPasswordMail };

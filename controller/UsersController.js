@@ -6,7 +6,6 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/emailer");
 const { validationResult } = require("express-validator");
 const {
-
   requestPasswordReset,
   resetPassword,
 } = require("../services/authService");
@@ -79,7 +78,7 @@ const resetPasswordRequestController = async (req, res, next) => {
   const requestPasswordResetService = await requestPasswordReset(
     req.body.email
   );
-   res.json({link:requestPasswordResetService});
+  res.json({ link: requestPasswordResetService });
 };
 
 const resetPasswordController = async (req, res, next) => {
@@ -103,7 +102,6 @@ const createUser = async (req, res) => {
       return res.status(409).json({ message: "User already exists" });
     }
 
-  
     // Hash the password
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -152,7 +150,6 @@ const getUserById = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-
 
 // Update a user by ID
 const updateUserById = async (req, res) => {
@@ -318,6 +315,5 @@ module.exports = {
   getUserById,
   getUsers,
   resetPasswordController,
-  resetPasswordRequestController
-  
+  resetPasswordRequestController,
 };
