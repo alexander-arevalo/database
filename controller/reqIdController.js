@@ -80,15 +80,36 @@ const declinedRequest = async (req, res) => {
 //@desc Get Id
 //@route route GET /api/reqId/:id
 //@access public
-const getId = (req, res) => {
-  res.status(200).json({ message: `Get Id for ${req.params.id}` });
+const getId = async (req, res) => {
+  const id = req.params.id;
+
+  await ReqId.findById(id)
+    .then((resp) => {
+      if (!resp) {
+        res.status(404).send({ message: `Request with id ${id} is not found` });
+      }
+      res.json(resp);
+    })
+    .catch((err) => {
+      res.status(500).json(err.message);
+    });
 };
 
 //@desc get all Id
 //@route route DELETE /api/reqId/:id
 //@access public
-const deleteId = (req, res) => {
-  res.status(200).json({ message: `Delete Id for ${req.params.id}` });
+const deleteId = async (req, res) => {
+  const id = req.params.id;
+  await ReqId.findByIdAndRemove(id)
+    .then((resp) => {
+      res.json(
+        { message: `Request with id ${id} is successfully deleted` },
+        resp
+      );
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 };
 
 module.exports = {
@@ -97,5 +118,5 @@ module.exports = {
   getId,
   deleteId,
   approveIdRequest,
-  declinedRequest
+  declinedRequest,
 };

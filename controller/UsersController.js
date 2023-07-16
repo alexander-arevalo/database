@@ -271,10 +271,11 @@ const declineUser = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    console.log("email :" + email);
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("not detected");
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
@@ -290,6 +291,7 @@ const login = async (req, res) => {
         password
     );
     if (!isPasswordValid && user) {
+      console.log("invalid password?");
       return res.status(400).json({ message: "Invalid email or password" });
     }
     if ((user && !isVerified) || isVerified == null) {
