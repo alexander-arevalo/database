@@ -4,9 +4,9 @@ const getAllAnnouncement = async (req, res) => {
   await Announcement.find()
     .then((resp) => {
       if (!resp) {
-        res.json({ message: "No announcements found"+ resp });
+        res.json({ message: "No announcements found" + resp });
       }
-      res.json({resp});
+      res.json({ resp });
     })
     .catch((err) => {
       res.status(500).json({ message: err.message });
@@ -14,11 +14,10 @@ const getAllAnnouncement = async (req, res) => {
 };
 
 const addAnnouncement = async (req, res) => {
-  const { date, description } = req.body;
+  const { description } = req.body;
 
   const newAnnouncement = new Announcement({
-    announcementDate: date,
-    announcementDescription: dsecription,
+    announcementDescription: description,
   });
   await newAnnouncement
     .save()
@@ -31,11 +30,10 @@ const addAnnouncement = async (req, res) => {
 };
 const editAnnouncement = async (req, res) => {
   const id = req.params.id;
-  const { date, description } = req.body;
+  const { description } = req.body;
 
   const findAnnouncement = await Announcement.findById(id);
   if (findAnnouncement) {
-    findAnnouncement.announcementDate = date;
     findAnnouncement.announcementDescription = description;
     findAnnouncement
       .save()
