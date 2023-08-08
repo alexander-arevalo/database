@@ -31,7 +31,7 @@ const addAnnouncement = async (req, res) => {
 const editAnnouncement = async (req, res) => {
   const id = req.params.id;
   const { description } = req.body;
-
+  console.log("editing");
   const findAnnouncement = await Announcement.findById(id);
   if (findAnnouncement) {
     findAnnouncement.announcementDescription = description;
@@ -66,10 +66,27 @@ const deleteAnnouncement = async (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+const findById = async (req, res) => {
+  const id = req.params.id;
+  await Announcement.findById(id)
+    .then((resp) => {
+      if (!resp) {
+        res
+          .status(404)
+          .send({ message: `Announcement with id ${id} is not found!` });
+      } else {
+        res.send(resp);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
 
 module.exports = {
   deleteAnnouncement,
   addAnnouncement,
   editAnnouncement,
   getAllAnnouncement,
+  findById,
 };

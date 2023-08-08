@@ -37,6 +37,18 @@ const EnrollmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  birthCert: {
+    type: String,
+    required: true,
+  },
+  healthRecord: {
+    type: String,
+    required: true,
+  },
+  validId: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Enrollees", EnrollmentSchema);

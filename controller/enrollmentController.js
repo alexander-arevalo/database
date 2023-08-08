@@ -23,7 +23,6 @@ const getEnrolleeById = async (req, res) => {
 };
 
 const addEnrollee = async (req, res) => {
-
   const enrollee = new Enrollee({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -31,6 +30,9 @@ const addEnrollee = async (req, res) => {
     relationship: req.body.relationship,
     phoneNumber: req.body.phoneNumber,
     birthDate: req.body.birthDate,
+    validId: req.body.validId,
+    birthCert: req.body.birthCert,
+    healthRecord: req.body.healthRecord,
   });
 
   try {
@@ -46,6 +48,20 @@ const updateEnrollee = async (req, res) => {
     const enrollee = await Enrollee.findById(req.params.id);
     if (enrollee) {
       enrollee.isApproved = true;
+      await enrollee.save();
+      res.json(enrollee);
+    } else {
+      res.status(404).json({ message: "Enrollee not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+const declineEnrolee = async (req, res) => {
+  try {
+    const enrollee = await Enrollee.findById(req.params.id);
+    if (enrollee && enrollee.isApproved == null) {
+      enrollee.isApproved = false;
       await enrollee.save();
       res.json(enrollee);
     } else {
@@ -76,4 +92,5 @@ module.exports = {
   addEnrollee,
   updateEnrollee,
   deleteEnrollee,
+  declineEnrolee,
 };

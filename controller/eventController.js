@@ -11,13 +11,22 @@ const getEvent = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: err.message });
   }
-  res.status(200).json({ message: "Get Event" });
 };
 
 //@desc Get event
 //@route route POST /api/event
 //@access admin
+const deleteEvent = async (req, res) => {
+  const id = req.params.id;
 
+  await Event.findByIdAndRemove(id)
+    .then((resp) => {
+      res.json({ message: `Event with id ${id} is successfully deleted` });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
 const createEvent = async (req, res) => {
   let title = req.body.title;
   let date = req.body.date;
@@ -65,19 +74,21 @@ const upadateEvent = async (req, res) => {
 };
 const findById = async (req, res) => {
   const id = req.params.id;
-  await Event.findById(id).then((resp) => {
-    if (res) {
-      res.json(resp);
-    }
-    if (!res) {
-      res.status(404).json({ message: `Event with id ${id} is not found` });
-    }
-  });
+  await Event.findById(id)
+    .then((resp) => {
+      if (res) {
+        res.json(resp);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: `Something went wrong ${err}` });
+    });
 };
 
 module.exports = {
   createEvent,
   getEvent,
   upadateEvent,
+  deleteEvent,
   findById,
 };

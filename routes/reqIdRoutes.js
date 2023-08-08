@@ -6,6 +6,7 @@ const {
   getAll,
   getId,
   approveIdRequest,
+  declinedRequest
 } = require("../controller/reqIdController");
 
 router.post("/", requestStudentId);
@@ -13,6 +14,7 @@ router.post("/", requestStudentId);
 router.get("/", getAll);
 
 router.get("/:id", getId);
-router.patch("/:id", approveIdRequest);
+router.patch("/approve/:id", approveIdRequest);
+router.patch("/decline/:id",declinedRequest)
 
 module.exports = router;

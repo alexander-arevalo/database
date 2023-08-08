@@ -6,6 +6,7 @@ const {
   addEnrollee,
   updateEnrollee,
   deleteEnrollee,
+  declineEnrolee,
 } = require("../controller/enrollmentController");
 
 router.post("/", addEnrollee);
@@ -15,6 +16,7 @@ router.get("/", getAllEnrollees);
 router.get("/:id", getEnrolleeById);
 
 router.delete("/:id", deleteEnrollee);
-router.patch("/:id/approve", updateEnrollee);
+router.patch("/approve/:id", updateEnrollee);
+router.patch("/decline/:id", declineEnrolee);
 
 module.exports = router;

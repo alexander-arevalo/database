@@ -4,8 +4,9 @@ const ReqId = require("../models/ReqId");
 //@access public
 const getAll = async (req, res) => {
   try {
-    const getRequestId = await ReqId.find();
-    res.json(getRequestId);
+    await ReqId.find().then((response) => {
+      res.json(response);
+    });
   } catch (error) {
     res.status(500).json({ message: err.message });
   }
@@ -45,36 +46,34 @@ const requestStudentId = async (req, res) => {
 const approveIdRequest = async (req, res) => {
   const id = req.params.id;
 
-  const requestId = await ReqId.findById({ _id: id });
-  if (!requestId.isApproved || requestId.isApproved == null) {
+  const requestId = await ReqId.findById(id);
+  if (!requestId.isApproved || (requestId.isApproved == null && requestId)) {
     requestId.isApproved = true;
-    await requestId.save();
+    await requestId.save().then((resp) => {
+      res.json(resp);
+    });
   } else {
     res.status(400).json({ message: "Request already approved" });
   }
-  res
-    .status(200)
-    .json(
-      { message: `Request with ID ${id} successfully approved` },
-      requestId
-    );
 };
 const declinedRequest = async (req, res) => {
   const id = req.params.id;
 
-  const requestId = await ReqId.findById({ _id: id });
-  if (!requestId.isApproved || requestId.isApproved == null) {
+  const requestId = await ReqId.findById(id);
+  if (requestId.isApproved == null && requestId) {
     requestId.isApproved = false;
-    await requestId.save();
+    await requestId
+      .save()
+      .then((ress) => {
+        res.json(ress);
+      })
+      .catch((err) => {
+        res.status(500).json({ message: err.message });
+      });
   } else {
-    res.status(400).json({ message: "Request already approved" });
+ 
+    res.status(400).json({ message: "Decided already" });
   }
-  res
-    .status(200)
-    .json(
-      { message: `Request with ID ${id} successfully approved` },
-      requestId
-    );
 };
 
 //@desc Get Id

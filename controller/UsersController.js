@@ -219,29 +219,35 @@ const deleteUserById = async (req, res) => {
 const approveUser = async (req, res) => {
   const id = req.params.id;
   const user = await User.findById(id);
-  if (user.isApproved == null) {
-    await User.findByIdAndUpdate(
-      id,
-      { isApproved: true },
-      { useFindAndModify: false }
-    )
-      .then((resp) => {
-        if (!resp) {
-          res.status(404).send({ message: "User not found" });
-        }
-        res.send({
-          resp,
-          message: `User with id ${id} is successfully approved`,
+  if(user){
+    if (user.isApproved == null) {
+      await User.findByIdAndUpdate(
+        id,
+        { isApproved: true },
+        { useFindAndModify: false }
+      )
+        .then((resp) => {
+          if (!resp) {
+            res.status(404).send({ message: "User not found" });
+          }
+          res.send({
+            resp,
+            message: `User with id ${id} is successfully approved`,
+          });
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
         });
-      })
-      .catch((err) => {
-        res.status(500).send({ message: err.message });
-      });
-  } else if (user.isApproved) {
-    res.status(401).send({ message: "This user is already approved" });
-  } else {
-    res.status(401).send({ message: "Bad Request" });
+    } else if (user.isApproved) {
+      res.status(401).send({ message: "This user is already approved" });
+    } else {
+      res.status(401).send({ message: "Bad Request" });
+    }
   }
+  else{
+    res.status(404).send({ message: "User not found" });
+  }
+ 
 };
 
 const declineUser = async (req, res) => {
@@ -300,7 +306,17 @@ const login = async (req, res) => {
 
     // Create a JWT token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-    res.json({ isAdmin, token, successful: true });
+    res.json({
+      isAdmin,
+      token,
+      successful: true,
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        id: user._id,
+        email: user.email,
+      },
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
