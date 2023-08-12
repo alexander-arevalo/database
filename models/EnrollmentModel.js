@@ -23,7 +23,9 @@ const EnrollmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
+  yearLevel: {
+    type: String,
+  },
   isApproved: {
     type: Boolean,
     default: null,
@@ -39,15 +41,15 @@ const EnrollmentSchema = new mongoose.Schema({
   },
   birthCert: {
     type: String,
-    required: true,
+    required: false,
   },
   healthRecord: {
     type: String,
-    required: true,
+    required: false,
   },
   validId: {
     type: String,
-    required: true,
+    required: false,
   },
   userID: {
     type: String,
