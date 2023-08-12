@@ -157,27 +157,36 @@ const updateUserById = async (req, res) => {
   const id = req.params.id;
 
   // Hash the new password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  var hashedPassword;
+  if (password) {
+    hashedPassword = await bcrypt.hash(password, 10);
+  }
 
-  await User.findById(id).then((resp) => {
-    if (!resp) {
-      res.status(404).send({ message: `User with id ${id} is not found` });
-    }
-    if (firstName) {
-      resp.firstName = firstName;
-    }
-    if (lastName) {
-      resp.lastName = lastName;
-    }
-    if (email) {
-      resp.email = email;
-    }
-    if (password) {
-      resp.password = hashedPassword;
-    }
-    resp.save();
-    res.status(200).send({ message: "User successfully updated!", User: resp });
-  });
+  await User.findById(id)
+    .then((resp) => {
+      if (!resp) {
+        res.status(404).send({ message: `User with id ${id} is not found` });
+      }
+      if (firstName) {
+        resp.firstName = firstName;
+      }
+      if (lastName) {
+        resp.lastName = lastName;
+      }
+      if (email) {
+        resp.email = email;
+      }
+      if (password) {
+        resp.password = hashedPassword;
+      }
+      resp.save();
+      res
+        .status(200)
+        .send({ message: "User successfully updated!", User: resp });
+    })
+    .catch((err) => {
+      console.log("Errord" + err.message);
+    });
 
   //     const hashedPassword = await bcrypt.hash(password, 10);
   // var id = req.params.id
@@ -219,7 +228,7 @@ const deleteUserById = async (req, res) => {
 const approveUser = async (req, res) => {
   const id = req.params.id;
   const user = await User.findById(id);
-  if(user){
+  if (user) {
     if (user.isApproved == null) {
       await User.findByIdAndUpdate(
         id,
@@ -243,11 +252,9 @@ const approveUser = async (req, res) => {
     } else {
       res.status(401).send({ message: "Bad Request" });
     }
-  }
-  else{
+  } else {
     res.status(404).send({ message: "User not found" });
   }
- 
 };
 
 const declineUser = async (req, res) => {
