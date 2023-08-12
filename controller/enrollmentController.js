@@ -34,6 +34,7 @@ const addEnrollee = async (req, res) => {
     validId: req.body.validId,
     birthCert: req.body.birthCert,
     healthRecord: req.body.healthRecord,
+    userID: req.body.userId,
   });
 
   try {

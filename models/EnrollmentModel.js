@@ -51,6 +51,10 @@ const EnrollmentSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  userID: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Enrollees", EnrollmentSchema);
