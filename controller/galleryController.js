@@ -64,7 +64,7 @@ const editGallery = async (req, res) => {
 const deleteGallery = async (req, res) => {
   const id = req.params.id;
 
-  const foundGallery = await Gallery.findByIdAndRemove(id)
+  await Gallery.findByIdAndRemove(id)
     .then((resp) => {
       res.json({ message: `Gallery with id ${id} is successfully deleted` });
     })
