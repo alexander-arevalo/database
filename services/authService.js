@@ -9,42 +9,48 @@ const requestPasswordReset = async (email) => {
   const user = await User.findOne({ email });
 
   if (!user) console.log("User does not exist");
-  if(user){
-  let token = await Token.findOne({ userId: user._id });
-  if (token) await token.deleteOne();
-  let resetToken = crypto.randomBytes(32).toString("hex");
-  const hash = await bcrypt.hash(resetToken, Number(10));
-  await new Token({
-    userId: user._id,
-    token: hash,
-    createdAt: Date.now(),
-  }).save();
-  console.log(user.email + " email");
-  const link = `127.0.0.1:5500/recovery.html?token=${resetToken}&id=${user._id}`;
-  try {
-    sendForgotPasswordMail(
-      user.email,
-      "Password Reset Request",
-      { name: user.firstName, link: link },
-      "./template/requestResetPassword.handlebars"
-    );
-  } catch (err) {
-    console.log(err.message + " error");
-  }
+  if (user) {
+    let token = await Token.findOne({ userId: user._id });
+    if (token) await token.deleteOne();
+    let resetToken = crypto.randomBytes(32).toString("hex");
+    const hash = await bcrypt.hash(resetToken, Number(10));
+    await new Token({
+      userId: user._id,
+      token: hash,
+      createdAt: Date.now(),
+    }).save();
+    console.log(user.email + " email");
+    const link = `http://127.0.0.1:5500/recovery.html?token=${resetToken}&id=${user._id}`;
+    try {
+      sendForgotPasswordMail(
+        user.email,
+        "Password Reset Request",
+        { name: user.firstName, link: link },
+        "./template/requestResetPassword.handlebars"
+      );
+    } catch (err) {
+      console.log(err.message + " error");
+    }
 
-  return link;
-}
+    return link;
+  }
 };
 const resetPassword = async (userId, token, password) => {
   let passwordResetToken = await Token.findOne({ userId });
+  console.log("Entering reset password");
   if (!passwordResetToken) {
     console.log("Invalid or expired password reset token");
   }
+  console.log("Erro isValid!");
   const isValid = await bcrypt.compare(token, passwordResetToken.token);
+
   if (!isValid) {
     console.log("Invalid or expired password reset token");
   }
-  const hash = await bcrypt.hash(password, Number(10));
+  console.log("Hashing error!");
+  console.log(password + " password");
+  const hash = await bcrypt.hash(password, 10);
+
   await User.updateOne(
     { _id: userId },
     { $set: { password: hash } },
