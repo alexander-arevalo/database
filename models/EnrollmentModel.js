@@ -55,6 +55,9 @@ const EnrollmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  submittedDate: {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("Enrollees", EnrollmentSchema);

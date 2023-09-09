@@ -24,6 +24,11 @@ const requestStudentId = async (req, res) => {
     address,
     studentPicture,
     phoneNumber,
+    fullName,
+    relationship1,
+    phoneNumber2,
+    address1,
+    personId,
   } = req.body;
   const reqid = new ReqId({
     firstName,
@@ -32,6 +37,11 @@ const requestStudentId = async (req, res) => {
     phoneNumber,
     address,
     studentPicture,
+    fullName,
+    relationship1,
+    phoneNumber2,
+    address1,
+    personId,
   });
   console.log("request ID" + reqid);
   await reqid
@@ -71,7 +81,6 @@ const declinedRequest = async (req, res) => {
         res.status(500).json({ message: err.message });
       });
   } else {
- 
     res.status(400).json({ message: "Decided already" });
   }
 };

@@ -14,31 +14,50 @@ const ReqIdSchema = new mongoose.Schema({
 
     max: 50,
   },
-  
+
   relationship: {
     type: String,
     required: true,
   },
-  
+
   phoneNumber: {
     type: String,
     required: true,
   },
- 
+
   address: {
     type: String,
     required: true,
   },
-  studentPicture:{
-    type:String,
-    required:true
+  studentPicture: {
+    type: String,
+    required: true,
   },
 
   isApproved: {
     type: Boolean,
     default: null,
   },
-
+  fullname: {
+    type: String,
+    required: true,
+  },
+  relationship1: {
+    type: String,
+    required: true,
+  },
+  phoneNumber2: {
+    type: String,
+    required: true,
+  },
+  address1: {
+    type: String,
+    required: true,
+  },
+  personId: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("createId", ReqIdSchema);
