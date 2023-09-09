@@ -38,7 +38,7 @@ const ReqIdSchema = new mongoose.Schema({
     type: Boolean,
     default: null,
   },
-  fullname: {
+  fullName: {
     type: String,
     required: true,
   },
