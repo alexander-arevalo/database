@@ -1,4 +1,5 @@
 const Enrollee = require("../models/EnrollmentModel");
+const sendEmail = require("../utils/emailer");
 
 const getAllEnrollees = async (req, res) => {
   try {
@@ -88,6 +89,20 @@ const deleteEnrollee = async (req, res) => {
   }
 };
 
+const remarkEnrollee = async (req, res) => {
+  try {
+    const enrollee = await Enrollee.findById(req.params.id);
+    if (enrollee) {
+      await enrollee.remark();
+      res.json({ message: "Updated remarks" });
+    } else {
+      res.status(404).json({ message: "Error" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getAllEnrollees,
   getEnrolleeById,
@@ -95,4 +110,5 @@ module.exports = {
   updateEnrollee,
   deleteEnrollee,
   declineEnrolee,
+  remarkEnrollee,
 };
