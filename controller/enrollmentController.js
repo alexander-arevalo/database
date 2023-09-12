@@ -1,7 +1,11 @@
 const Enrollee = require("../models/EnrollmentModel");
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { sendForgotPasswordMail } = require("../utils/email/emailer");
+=======
+const sendEmail = require("../utils/emailer");
+>>>>>>> f538f6fcf8e0256996f2e3b17de1d640f96645de
 =======
 const sendEmail = require("../utils/emailer");
 >>>>>>> f538f6fcf8e0256996f2e3b17de1d640f96645de
