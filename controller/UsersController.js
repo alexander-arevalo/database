@@ -225,34 +225,37 @@ const deleteUserById = async (req, res) => {
       console.log(err.message);
     });
 };
+
 const approveUser = async (req, res) => {
   const id = req.params.id;
   const user = await User.findById(id);
-  //
+
   const text = "Your Account Registration has been approved, Thank you!";
   const subject = "User Registration";
-  //
+
   if (user) {
     if (user.isApproved == null) {
-      await User.findByIdAndUpdate(
-        id,
-        { isApproved: true },
-        //
-        sendEmail.sendEmail(email, subject, text),
-        { useFindAndModify: false }
-      )
-        .then((resp) => {
-          if (!resp) {
-            res.status(404).send({ message: "User not found" });
-          }
+      try {
+        // Send the email
+        await sendEmail.sendEmail(email, subject, text);
+
+        // Update the user
+        const updatedUser = await User.findByIdAndUpdate(
+          id,
+          { isApproved: true },
+          { useFindAndModify: false }
+        );
+
+        if (!updatedUser) {
+          res.status(404).send({ message: "User not found" });
+        } else {
           res.send({
-            resp,
             message: `User with id ${id} is successfully approved`,
           });
-        })
-        .catch((err) => {
-          res.status(500).send({ message: err.message });
-        });
+        }
+      } catch (err) {
+        res.status(500).send({ message: err.message });
+      }
     } else if (user.isApproved) {
       res.status(401).send({ message: "This user is already approved" });
     } else {
