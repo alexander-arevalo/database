@@ -228,11 +228,17 @@ const deleteUserById = async (req, res) => {
 const approveUser = async (req, res) => {
   const id = req.params.id;
   const user = await User.findById(id);
+  //
+  const text = "Your Account Registration has been approved, Thank you!";
+  const subject = "User Registration";
+  //
   if (user) {
     if (user.isApproved == null) {
       await User.findByIdAndUpdate(
         id,
         { isApproved: true },
+        //
+        sendEmail.sendEmail(email, subject, text),
         { useFindAndModify: false }
       )
         .then((resp) => {
