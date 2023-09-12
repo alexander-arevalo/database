@@ -2,9 +2,6 @@ const Enrollee = require("../models/EnrollmentModel");
 
 const { sendForgotPasswordMail } = require("../utils/email/emailer");
 
-const sendEmail = require("../utils/emailer");
-
-const sendEmail = require("../utils/emailer");
 
 const sendEmail = require("../utils/emailer");
 
