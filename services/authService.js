@@ -20,7 +20,7 @@ const requestPasswordReset = async (email) => {
     createdAt: Date.now(),
   }).save();
   console.log(user.email + " email");
-  const link = `https://mars-daycare-center.online/recovery.html?token=${resetToken}&id=${user._id}`;
+  const link = `127.0.0.1:5500/recovery.html?token=${resetToken}&id=${user._id}`;
   try {
     sendForgotPasswordMail(
       user.email,
@@ -32,19 +32,25 @@ const requestPasswordReset = async (email) => {
     console.log(err.message + " error");
   }
 
-  return link;
-}
+    return link;
+  }
 };
 const resetPassword = async (userId, token, password) => {
   let passwordResetToken = await Token.findOne({ userId });
+  console.log("Entering reset password");
   if (!passwordResetToken) {
     console.log("Invalid or expired password reset token");
   }
+  console.log("Erro isValid!");
   const isValid = await bcrypt.compare(token, passwordResetToken.token);
+
   if (!isValid) {
     console.log("Invalid or expired password reset token");
   }
-  const hash = await bcrypt.hash(password, Number(10));
+  console.log("Hashing error!");
+  console.log(password + " password");
+  const hash = await bcrypt.hash(password, 10);
+
   await User.updateOne(
     { _id: userId },
     { $set: { password: hash } },

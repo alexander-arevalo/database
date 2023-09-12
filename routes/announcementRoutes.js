@@ -9,8 +9,8 @@ const {
   findById,
 } = require("../controller/announcementController");
 
-router.post("/", auth.verifyToken, addAnnouncement);
-router.get("/", auth.verifyToken, getAllAnnouncement);
+router.post("/", auth.verifyToken, auth.isAdmin, addAnnouncement);
+router.get("/", getAllAnnouncement);
 router.delete("/:id", auth.verifyToken, auth.isAdmin, deleteAnnouncement);
 router.post("/:id", auth.verifyToken, auth.isAdmin, editAnnouncement);
 router.get("/:id", auth.verifyToken, auth.isAdmin, findById);
