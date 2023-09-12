@@ -20,7 +20,7 @@ const requestPasswordReset = async (email) => {
     createdAt: Date.now(),
   }).save();
   console.log(user.email + " email");
-  const link = `127.0.0.1:5500/recovery.html?token=${resetToken}&id=${user._id}`;
+  const link = `https://mars-daycare-center.online/recovery.html?token=${resetToken}&id=${user._id}`;
   try {
     sendForgotPasswordMail(
       user.email,

@@ -1,4 +1,5 @@
 const Enrollee = require("../models/EnrollmentModel");
+const { sendForgotPasswordMail } = require("../utils/email/emailer");
 
 const getAllEnrollees = async (req, res) => {
   try {
@@ -48,9 +49,13 @@ const addEnrollee = async (req, res) => {
 const updateEnrollee = async (req, res) => {
   try {
     const enrollee = await Enrollee.findById(req.params.id);
+    const { firstName, email, lastName } = enrollee;
+    const subject = "Enrollment request approved";
+    const template = "./template/approveEnrollment.handlebars";
     if (enrollee) {
       enrollee.isApproved = true;
       await enrollee.save();
+      sendForgotPasswordMail(email, subject, { firstName, lastName }, template);
       res.json(enrollee);
     } else {
       res.status(404).json({ message: "Enrollee not found" });

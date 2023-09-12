@@ -50,8 +50,10 @@ const sendForgotPasswordMail = async (email, subject, payload, template) => {
         html: compiledTemplate(payload),
       };
     };
+    console.log("dito test")
     // Send email
     await autoEmail.sendMail(options(), (err, info) => {
+      console.log("sending")
       if (err) {
         console.log(err.message);
       } else {
