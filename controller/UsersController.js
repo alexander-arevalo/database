@@ -225,21 +225,14 @@ const deleteUserById = async (req, res) => {
       console.log(err.message);
     });
 };
-
 const approveUser = async (req, res) => {
   const id = req.params.id;
   const user = await User.findById(id);
 
-  const text = "Your Account Registration has been approved, Thank you!";
-  const subject = "User Registration";
-
   if (user) {
     if (user.isApproved == null) {
       try {
-        // Send the email
-        await sendEmail.sendEmail(email, subject, text);
-
-        // Update the user
+        // Update user approval status
         const updatedUser = await User.findByIdAndUpdate(
           id,
           { isApproved: true },
@@ -247,22 +240,28 @@ const approveUser = async (req, res) => {
         );
 
         if (!updatedUser) {
-          res.status(404).send({ message: "User not found" });
-        } else {
-          res.send({
-            message: `User with id ${id} is successfully approved`,
-          });
+          return res.status(404).send({ message: "User not found" });
         }
+
+        // Send approval email
+        const text = "Your Account Registration has been approved, Thank you!";
+        const subject = "User Registration Approved";
+        await sendEmail.sendEmail(user.email, subject, text);
+
+        return res.send({
+          message: `User with id ${id} is successfully approved`,
+        });
       } catch (err) {
-        res.status(500).send({ message: err.message });
+        console.error(err.message);
+        return res.status(500).send("Server Error");
       }
     } else if (user.isApproved) {
-      res.status(401).send({ message: "This user is already approved" });
+      return res.status(401).send({ message: "This user is already approved" });
     } else {
-      res.status(401).send({ message: "Bad Request" });
+      return res.status(401).send({ message: "Bad Request" });
     }
   } else {
-    res.status(404).send({ message: "User not found" });
+    return res.status(404).send({ message: "User not found" });
   }
 };
 
